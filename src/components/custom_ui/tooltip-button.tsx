@@ -11,6 +11,7 @@ interface TooltipBtnProps {
   side?: "top" | "right" | "bottom" | "left";
   action?: (e?: any) => void;
   url?: string;
+  target?: "_blank" | "_self" | "_parent" | "_top";
   variant?:
     | "default"
     | "destructive"
@@ -29,6 +30,7 @@ export default function TooltipButton({
   label = "no label",
   icon: Icon = CircleQuestionMark, // <- rename here
   url,
+  target,
   align,
   side,
   action,
@@ -43,7 +45,7 @@ export default function TooltipButton({
     <Tooltip>
       <TooltipTrigger asChild className={className}>
         {url ? (
-          <Link to={url}>
+          <Link to={url} target={target}>
             <Button
               variant={variant}
               onClick={action}

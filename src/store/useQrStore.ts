@@ -1,3 +1,4 @@
+import type QRCodeStyling from "qr-code-styling";
 import { create } from "zustand";
 // import { persist } from "zustand/middleware";
 
@@ -10,7 +11,7 @@ export type DOTSTYLES =
   | "classy-rounded"
   | undefined;
 
-export type COLORTYPE = "single" | "gardient";
+export type COLORTYPE = "single" | "gardient" | string;
 export type GARDIENTTYPE = "linear" | "radiul";
 export type CORNERSSTYLE =
   | "classy"
@@ -21,6 +22,8 @@ export type CORNERSSTYLE =
   | "rounded"
   | "square"
   | undefined;
+// | string;
+export type CORNERSQUARETYPE = "dot" | "square" | "extra-rounded" | undefined;
 
 // export type CORNERDOTSTYLE = "none" | "square" | "dot" | undefined;
 export type QRTYPEMODE =
@@ -30,12 +33,26 @@ export type QRTYPEMODE =
   | "Kanji"
   | undefined;
 export type QRERRORLEVEL = "Q" | "L" | "M" | "H" | undefined;
-export type PICTUREEXTENSION = "png" | "jpeg" | "webp" | "svg" | undefined;
+export type PICTUREEXTENSION = "png" | "jpeg" | "webp" | "svg" | string;
+export type TABOPTIONS =
+  | "main"
+  | "dots"
+  | "corners"
+  | "corners-dots"
+  | "picture";
+export type THEME = "dark" | "light" | "system";
 
 // isSync, setIsSync;
 
 interface QrStore {
+  theme: THEME;
+  setTheme: (v: THEME) => void;
+  //
+  qrInstance: QRCodeStyling | null;
+  setQrInstance: (instance: QRCodeStyling) => void;
+  //
   isSync: boolean;
+  tab: TABOPTIONS;
   //
   data: string;
   color: string;
@@ -56,9 +73,9 @@ interface QrStore {
   dotGardientType: GARDIENTTYPE;
   dotColor: string;
   // corners square
-  cornersSquareStyle: CORNERSSTYLE;
-  cornersColorType: COLORTYPE;
-  cornersGardientType: GARDIENTTYPE;
+  cornersSquareStyle: CORNERSQUARETYPE;
+  cornersSquareColorType: COLORTYPE;
+  cornersSquareGardientType: GARDIENTTYPE;
   cornersSquareColor: string;
 
   //corners dot
@@ -85,6 +102,7 @@ interface QrStore {
 
   //
   setIsSync: (v: boolean) => void;
+  setTab: (v: TABOPTIONS) => void;
   //
   setData: (v: string) => void;
   setColor: (v: string) => void;
@@ -105,9 +123,9 @@ interface QrStore {
   setDotGardientType: (v: GARDIENTTYPE) => void;
   setDotColor: (v: string) => void;
   // CORNERS SQUARE
-  setCornersSquareStyle: (v: CORNERSSTYLE) => void;
-  setCornersColorType: (v: COLORTYPE) => void;
-  setCornersGardientType: (v: GARDIENTTYPE) => void;
+  setCornersSquareStyle: (v: CORNERSQUARETYPE) => void;
+  setCornersSquareColorType: (v: COLORTYPE) => void;
+  setCornersSquareGardientType: (v: GARDIENTTYPE) => void;
   setCornersSquareColor: (v: string) => void;
   // CORNER DOTS
   setCornersDotStyle: (v: CORNERSSTYLE) => void;
@@ -130,10 +148,17 @@ interface QrStore {
 }
 
 export const useQrStore = create<QrStore>()((set) => ({
+  theme: "dark",
+  setTheme: (v: THEME) => set({ theme: v }),
+  //
+  qrInstance: null,
+  setQrInstance: (instance) => set({ qrInstance: instance }),
+  //
   isSync: false,
+  tab: "main",
   //
   data: "https://www.google.com",
-  color: "#313131",
+  color: "#0a0a0a",
   bgColor: "#f1f1f1",
   logo: "",
   size: 250,
@@ -146,14 +171,14 @@ export const useQrStore = create<QrStore>()((set) => ({
   //
   usePicture: false,
   //
-  dotStyle: "rounded",
+  dotStyle: "square",
   dotColorType: "single",
   dotGardientType: "linear",
   dotColor: "",
   //
-  cornersSquareStyle: "rounded",
-  cornersColorType: "single",
-  cornersGardientType: "linear",
+  cornersSquareStyle: "square",
+  cornersSquareColorType: "single",
+  cornersSquareGardientType: "linear",
   cornersSquareColor: "",
   //
   cornersDotStyle: "square",
@@ -167,7 +192,7 @@ export const useQrStore = create<QrStore>()((set) => ({
   backgroundColor: "",
   //
   imageHideBackground: false,
-  imageSize: 100,
+  imageSize: 0.5,
   imageMargin: 20,
   //
   qrTypeNumber: 0,
@@ -176,6 +201,7 @@ export const useQrStore = create<QrStore>()((set) => ({
 
   //
   setIsSync: (v: boolean) => set({ isSync: v }),
+  setTab: (v: TABOPTIONS) => set({ tab: v }),
   //
   setData: (v: string) => set({ data: v }),
   setColor: (v: string) => set({ color: v }),
@@ -196,9 +222,12 @@ export const useQrStore = create<QrStore>()((set) => ({
   setDotGardientType: (v: GARDIENTTYPE) => set({ dotGardientType: v }),
   setDotColor: (v: string) => set({ dotColor: v }),
   //
-  setCornersSquareStyle: (v: CORNERSSTYLE) => set({ cornersSquareStyle: v }),
-  setCornersColorType: (v: COLORTYPE) => set({ cornersColorType: v }),
-  setCornersGardientType: (v: GARDIENTTYPE) => set({ cornersGardientType: v }),
+  setCornersSquareStyle: (v: CORNERSQUARETYPE) =>
+    set({ cornersSquareStyle: v }),
+  setCornersSquareColorType: (v: COLORTYPE) =>
+    set({ cornersSquareColorType: v }),
+  setCornersSquareGardientType: (v: GARDIENTTYPE) =>
+    set({ cornersSquareGardientType: v }),
   setCornersSquareColor: (v: string) => set({ cornersSquareColor: v }),
   //
   setCornersDotStyle: (v: CORNERSSTYLE) => set({ cornersDotStyle: v }),

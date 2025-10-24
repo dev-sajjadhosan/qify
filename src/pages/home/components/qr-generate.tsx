@@ -1,14 +1,15 @@
 import { useEffect, useRef } from "react";
-import QRCodeStyling, { type TypeNumber } from "qr-code-styling";
+import QRCodeStyling, { type TypeNumber, type DotType } from "qr-code-styling";
 import { Card, CardContent } from "@/components/ui/card";
-import { useQrStore } from "@/store/useQrStore";
+import { useQrStore, type CORNERSQUARETYPE } from "@/store/useQrStore";
 
 export default function QrGenerate() {
+  const setQrInstance = useQrStore((s) => s.setQrInstance);
   const qrRef = useRef<HTMLDivElement>(null);
   const qrCode = useRef<QRCodeStyling | null>(null);
   const {
+    theme,
     isSync,
-    //
     data,
     width,
     height,
@@ -29,7 +30,20 @@ export default function QrGenerate() {
     qrTypeMode,
     qrErrorLevel,
     margin,
+    //
+    setDotColor,
+    setBackgroundColor,
   } = useQrStore();
+
+  useEffect(() => {
+    if (theme === "dark") {
+      setDotColor("#fff");
+      setBackgroundColor("#0a0a0a");
+    } else {
+      setDotColor("#0a0a0a");
+      setBackgroundColor("#fff");
+    }
+  }, [theme, setDotColor, setBackgroundColor]);
 
   useEffect(() => {
     qrCode.current = new QRCodeStyling({
@@ -38,13 +52,14 @@ export default function QrGenerate() {
       height: isSync ? size : height,
       image: logo,
       type: "svg",
-      // image:
-      //   "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
       margin,
-      dotsOptions: { color: dotColor, type: dotStyle },
+      dotsOptions: {
+        color: dotColor,
+        type: dotStyle as DotType,
+      },
       cornersSquareOptions: {
         color: cornersSquareColor,
-        type: cornersSquareStyle,
+        type: cornersSquareStyle as CORNERSQUARETYPE,
       },
       cornersDotOptions: { color: cornersDotColor, type: cornersDotStyle },
       backgroundOptions: { color: backgroundColor, round: backgroundRadius },
@@ -61,6 +76,7 @@ export default function QrGenerate() {
       },
     });
 
+    setQrInstance(qrCode.current!);
     if (qrRef.current) qrCode.current.append(qrRef.current);
   }, []);
 
@@ -71,13 +87,15 @@ export default function QrGenerate() {
       height: isSync ? size : height,
       margin,
       type: "svg",
-      // image:
-      //   "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
       image: logo,
-      dotsOptions: { color: dotColor, type: dotStyle, roundSize: true },
+      dotsOptions: {
+        color: dotColor,
+        type: dotStyle as DotType,
+        // roundSize: true,
+      },
       cornersSquareOptions: {
         color: cornersSquareColor,
-        type: cornersSquareStyle,
+        type: cornersSquareStyle as CORNERSQUARETYPE,
       },
       cornersDotOptions: { color: cornersDotColor, type: cornersDotStyle },
       backgroundOptions: { color: backgroundColor, round: backgroundRadius },
@@ -104,13 +122,16 @@ export default function QrGenerate() {
     dotColor,
     dotStyle,
     cornersSquareStyle,
+    cornersSquareColor,
     cornersDotStyle,
+    cornersDotColor,
     backgroundColor,
     backgroundRadius,
     qrTypeNumber,
     qrErrorLevel,
     qrTypeMode,
     imageHideBackground,
+    imageSize,
     imageMargin,
   ]);
 

@@ -25,7 +25,7 @@ export default function ColorSelectBox({
 
   return (
     <>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         <Label>{label}: </Label>
         <div className="flex flex-wrap items-center gap-3">
           {data?.map((c: any, i: number) => (

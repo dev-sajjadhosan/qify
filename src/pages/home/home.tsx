@@ -1,50 +1,54 @@
 import Header from "@/components/shared/header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Copy, Link } from "lucide-react";
+import {
+  Copy,
+  ExternalLink,
+  Link,
+  SquareArrowOutUpLeftIcon,
+  SquareArrowOutUpRightIcon,
+} from "lucide-react";
 import OptionsMain from "./components/options-main";
-import { useStore } from "@/store/userStore";
 import UsePictureDialog from "./components/use-picture-dilaog";
 import QrGenerate from "./components/qr-generate";
-import { useQrStore } from "@/store/useQrStore";
+import { useQrStore, type TABOPTIONS } from "@/store/useQrStore";
+import DotsCompoents from "./components/dots-tab";
+import CornersSquareComponents from "./components/corners-square-tab";
+import CornersDotsComponents from "./components/corners-dots-tab";
+import PictureComponents from "./components/picture-tab";
+import TooltipButton from "@/components/custom_ui/tooltip-button";
 
 const menuPaths = [
   {
-    hash: "main",
     label: "main",
     icon: " ",
   },
   {
-    hash: "dots",
     label: "dots",
     icon: " ",
   },
   {
-    hash: "corners",
     label: "corners",
     icon: " ",
   },
   {
-    hash: "corners_dots",
     label: "corners-dots",
     icon: " ",
   },
   {
-    hash: "picture",
     label: "picture",
     icon: " ",
   },
 ];
 
 export default function HomePage() {
-  const { current, setCurrent } = useStore();
-  const { data } = useQrStore();
+  const { data, tab, setTab } = useQrStore();
   return (
     <>
       <UsePictureDialog />
       <div className="flex flex-col gap-1.5 h-full">
         <Header />
-        <div className="mt-7 flex items-center justify-between w-full">
+        <div className="mt-7 flex items-center justify-between w-full h-full">
           <div className="flex flex-col gap-7">
             <QrGenerate />
             <div className="flex items-center gap-1.5 border px-3 py-1 rounded-md">
@@ -53,21 +57,29 @@ export default function HomePage() {
                 placeholder="get url here..."
                 className="bg-transparent! border-0"
                 defaultValue={data}
+                value={data}
               />
-              <Button variant={"ghost"}>
-                <Copy /> Copy
-              </Button>
+              <TooltipButton icon={Copy} label="Copy" />
+              <TooltipButton
+                icon={ExternalLink}
+                label="View Link"
+                variant="secondary"
+                size="sm"
+                url={data}
+                target="_blank"
+              />
             </div>
           </div>
-          <div className="flex flex-col gap-3 w-1/2 h-full">
-            <div>
+          {/* ----------------- */}
+          <div className="flex flex-col justify-start gap-3 w-1/2 h-full mt-15">
+            <div className="justify-start">
               <ul className="flex items-center text-sm bg-secondary rounded-md h-9 mb-5 overflow-hidden w-fit">
                 {menuPaths.map((n, i) => (
                   <li
                     key={i}
-                    onClick={() => setCurrent(n?.hash ?? "")}
+                    onClick={() => setTab(n.label as TABOPTIONS)}
                     className={`h-full w-fit px-5 cursor-pointer capitalize flex items-center justify-center ${
-                      current === n.hash
+                      tab === n.label
                         ? "bg-primary text-primary-foreground"
                         : ""
                     }`}
@@ -77,22 +89,21 @@ export default function HomePage() {
                 ))}
               </ul>
             </div>
-            <OptionsMain />
-            {/* <div className="flex flex-col gap-1">
-              <Label>Dot Options:</Label>
-              <div className="flex flex-wrap items-center gap-3">
-                {[
-                  "square",
-                  "dots",
-                  "rounded",
-                  "extra rounded",
-                  "classy",
-                  "classy rounded",
-                ].map((d, i) => (
-                  <Button key={i}>{d}</Button>
-                ))}
-              </div>
-            </div> */}
+            <div>
+              {tab == "main" ? (
+                <OptionsMain />
+              ) : tab === "dots" ? (
+                <DotsCompoents />
+              ) : tab === "corners" ? (
+                <CornersSquareComponents />
+              ) : tab === "corners-dots" ? (
+                <CornersDotsComponents />
+              ) : tab === "picture" ? (
+                <PictureComponents />
+              ) : (
+                ""
+              )}
+            </div>
           </div>
         </div>
       </div>

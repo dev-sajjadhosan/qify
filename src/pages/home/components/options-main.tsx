@@ -2,6 +2,7 @@ import ColorSelectBox from "@/components/custom_ui/color-select-box";
 import TooltipButton from "@/components/custom_ui/tooltip-button";
 import InputBox from "@/components/shared/input-box";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -11,54 +12,42 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useQrStore, type QRERRORLEVEL } from "@/store/useQrStore";
-import { Circle, ImagePlus, ImageUp, Square, Trash2 } from "lucide-react";
+import { colors } from "@/utils/shared";
+import {
+  Circle,
+ 
+  MousePointerClick,
+  QrCode,
+  Square,
 
-const colors = [
-  {
-    color: "#313131",
-  },
-  {
-    color: "#fff",
-  },
-  {
-    color: "#F719AD",
-  },
-  {
-    color: "#16A300",
-  },
-  {
-    color: "#F54927",
-  },
-  {
-    color: "#F77619",
-  },
-  {
-    color: "#19A2F7",
-  },
-  {
-    color: "#8C19F7",
-  },
-  {
-    color: "#008DA3",
-  },
-];
+} from "lucide-react";
+import { useRef } from "react";
+import { toast } from "sonner";
+import UploadSection from "./upload-section";
 
 export default function OptionsMain() {
   const {
     isSync,
     setIsSync,
     //
+    data,
     width,
     height,
     margin,
+    setData,
     setWidth,
     setHeight,
     setMargin,
-    logo,
+   
     size,
     setSize,
-    setLogo,
+    
     //
+    dotColorType,
+    dotGardientType,
+    setDotColorType,
+    setDotGardientType,
+    setDotColor,
     // backgroundColor,
     backgroundRadius,
     backgroundColorType,
@@ -68,14 +57,7 @@ export default function OptionsMain() {
     setBackgroundGardientType,
     setBackgroundRadius,
     //
-    dotColorType,
-    dotGardientType,
-    setDotColorType,
-    setDotColor,
-    setDotGardientType,
-    //
-    usePicture,
-    setUsePicture,
+  
     //
     qrTypeNumber,
     setQrTypeNumber,
@@ -83,8 +65,10 @@ export default function OptionsMain() {
     qrErrorLevel,
   } = useQrStore();
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center gap-5">
         <div className="flex gap-1 items-end">
           <InputBox
@@ -132,7 +116,7 @@ export default function OptionsMain() {
         setGardientType={setBackgroundGardientType}
         getColor={setBackgroundColor}
       />
-      <ColorSelectBox
+      {/* <ColorSelectBox
         data={colors}
         label="QrCode Color"
         colorType={dotColorType}
@@ -140,46 +124,8 @@ export default function OptionsMain() {
         setColorType={setDotColorType}
         setGardientType={setDotGardientType}
         getColor={setDotColor}
-      />
-      <div className="flex flex-col gap-1">
-        <Label>Use Picture:</Label>
-        <div className="flex items-center gap-5">
-          {logo ? (
-            <Button onClick={() => setLogo("")}>
-              <Trash2 /> Remove
-            </Button>
-          ) : (
-            <label
-              htmlFor="upload_image"
-              className="flex items-center gap-2 border border-secondary rounded-sm px-5 py-2 text-sm font-medium [&_svg]:size-4.5 hover:bg-secondary/85 hover:text-secondary-foreground cursor-pointer active:scale-95"
-            >
-              <input
-                type="file"
-                name="upload_image"
-                id="upload_image"
-                hidden
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const url = URL.createObjectURL(file);
-                    setLogo(url);
-                  }
-                }}
-              />
-              <ImagePlus />
-              Upload
-            </label>
-          )}
-
-          <Button
-            variant={"secondary"}
-            onClick={() => setUsePicture(!usePicture)}
-          >
-            <ImageUp />
-            Use Picture
-          </Button>
-        </div>
-      </div>
+      /> */}
+      <UploadSection />
       <div className="grid grid-cols-3 gap-5">
         <InputBox
           label="Qr Dots:"
@@ -214,7 +160,7 @@ export default function OptionsMain() {
             value={qrErrorLevel}
             onValueChange={(v) => setQrErrorLevel(v as QRERRORLEVEL)}
           >
-            <SelectTrigger size="sm" className="w-[85px]">
+            <SelectTrigger className="w-[85px]">
               <SelectValue placeholder="" />
             </SelectTrigger>
             <SelectContent>
@@ -225,6 +171,33 @@ export default function OptionsMain() {
             </SelectContent>
           </Select>
         </div>
+      </div>
+      {/*  */}
+      <div className="flex items-center gap-1.5 border px-3 py-3 rounded-lg">
+        <QrCode size={20} />
+        <Input
+          placeholder="Write your link here"
+          className="bg-transparent! border-0"
+          defaultValue={data}
+          ref={inputRef}
+          onKeyDown={(e) => {
+            const k = e.key.toLocaleLowerCase();
+            if (k === "enter") {
+              const v = inputRef.current?.value;
+              if (v === "") return toast.warning("Your Field is empty!");
+              setData(v || "");
+            }
+          }}
+        />
+        <Button
+          onClick={() => {
+            const v = inputRef.current?.value;
+            if (v === "") return toast.warning("Your Field is empty!");
+            setData(v || "");
+          }}
+        >
+          <MousePointerClick /> Generate
+        </Button>
       </div>
     </div>
   );

@@ -11,11 +11,13 @@ export default function InputBox({
   min = 4,
   getValue,
   defValue = 0,
+  step = 1,
 }: {
   label: string;
   placeHolder: string;
   max?: number;
   min?: number;
+  step?: number;
   defValue?: number;
   getValue?: (v: number) => void;
 }) {
@@ -28,8 +30,8 @@ export default function InputBox({
   };
 
   const sendValue = (key?: string) => {
-    if (key === "arrowup") updateValue(current + 1);
-    if (key === "arrowdown") updateValue(current - 1);
+    if (key === "arrowup") updateValue(current + step);
+    if (key === "arrowdown") updateValue(current - step);
   };
 
   return (
@@ -45,6 +47,7 @@ export default function InputBox({
           onKeyDown={(e) => sendValue(e.key.toLowerCase())}
           min={min}
           max={max}
+          step={step}
           className="w-24 text-center"
         />
         <TooltipButton icon={Plus} action={() => sendValue("arrowup")} />
