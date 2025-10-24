@@ -17,6 +17,7 @@ import CornersSquareComponents from "./components/corners-square-tab";
 import CornersDotsComponents from "./components/corners-dots-tab";
 import PictureComponents from "./components/picture-tab";
 import TooltipButton from "@/components/custom_ui/tooltip-button";
+import { toast } from "sonner";
 
 const menuPaths = [
   {
@@ -59,7 +60,14 @@ export default function HomePage() {
                 defaultValue={data}
                 value={data}
               />
-              <TooltipButton icon={Copy} label="Copy" />
+              <TooltipButton
+                icon={Copy}
+                label="Copy"
+                action={() => {
+                  navigator.clipboard.writeText(data);
+                  toast.success("Copied!");
+                }}
+              />
               <TooltipButton
                 icon={ExternalLink}
                 label="View Link"

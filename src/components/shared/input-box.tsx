@@ -38,7 +38,7 @@ export default function InputBox({
     <div className="flex flex-col gap-2">
       <Label>{label}</Label>
       <div className="flex items-center gap-1">
-        <TooltipButton icon={Minus} action={() => sendValue("arrowdown")} />
+        <TooltipButton label="Decrement" icon={Minus} action={() => sendValue("arrowdown")} />
         <Input
           type="number"
           placeholder={placeHolder}
@@ -50,7 +50,7 @@ export default function InputBox({
           step={step}
           className="w-24 text-center"
         />
-        <TooltipButton icon={Plus} action={() => sendValue("arrowup")} />
+        <TooltipButton label="Increment" icon={Plus} action={() => sendValue("arrowup")} />
       </div>
     </div>
   );

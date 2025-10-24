@@ -136,7 +136,7 @@ export default function QrGenerate() {
   ]);
 
   return (
-    <Card className="w-lg h-[27rem]">
+    <Card className="w-lg h-[27rem] bg-transparent! border-0">
       <CardContent className="flex flex-col items-center justify-center h-full">
         <div ref={qrRef}></div>
       </CardContent>

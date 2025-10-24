@@ -43,11 +43,11 @@ export default function OptionsMain() {
     setSize,
     
     //
-    dotColorType,
-    dotGardientType,
-    setDotColorType,
-    setDotGardientType,
-    setDotColor,
+    // dotColorType,
+    // dotGardientType,
+    // setDotColorType,
+    // setDotGardientType,
+    // setDotColor,
     // backgroundColor,
     backgroundRadius,
     backgroundColorType,
@@ -174,7 +174,7 @@ export default function OptionsMain() {
       </div>
       {/*  */}
       <div className="flex items-center gap-1.5 border px-3 py-3 rounded-lg">
-        <QrCode size={20} />
+        <QrCode />
         <Input
           placeholder="Write your link here"
           className="bg-transparent! border-0"
